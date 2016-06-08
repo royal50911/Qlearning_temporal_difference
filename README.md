@@ -6,7 +6,7 @@ Reinforcement learning using Q-learning algorithm in which the probabilistic mod
 To run our code:
 + First install Ros: http://wiki.ros.org/ROS/Installation
 + After finishing Ros installation, then clone or copy our code to catkin_ws/src
-+ Open the terminal and run catkin_make (This step is just the initial step, so you dont have run everytime)
++ Open the terminal and change dir to catkin_ws and  run catkin_make (This step is just the initial setup, so you dont have to run everytime)
 + Then run: 
           roslaunch cse_190_assi_3 solution_python.launch
 + After hit the command, it will run Q-learning and also other 2 algorithms Astar and MDP (If you dont want Astar and MDP, just comment out the line Astar() and MDP() in robot.py file at the very end of the code). After finish running, it will output 3 json files: pathlist.json for Astar, policy_MDP_list.json for MDP and policy_QL_list.json. It also outputs pics of simulation of Q-learning.
