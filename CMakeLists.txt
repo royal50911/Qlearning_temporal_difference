@@ -51,6 +51,7 @@ add_message_files(
   FILES
   AStarPath.msg
   PolicyList.msg
+  PathList.msg
 )
 
 ## Generate services in the 'srv' folder

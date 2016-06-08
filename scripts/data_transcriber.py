@@ -2,7 +2,7 @@
 
 import rospy
 from std_msgs.msg import String, Float32, Bool
-from cse_190_assi_3.msg import AStarPath, PolicyList
+from cse_190_assi_3.msg import AStarPath, PolicyList, PathList
 import json
 import image_util
 from read_config import read_config
@@ -15,10 +15,20 @@ class RobotLogger():
                 AStarPath,
                 self.handle_a_star_algorithm_path
         )
-        self.policy_result = rospy.Subscriber(
+        self.policy_ql_result = rospy.Subscriber(
                 "/results/policy_list",
                 PolicyList,
-                self.handle_mdp_policy_data
+                self.handle_ql_policy_data
+        )
+        self.path_result = rospy.Subscriber(
+                "/results/pathql_list",
+                PathList,
+                self.handle_ql_path_data
+        )
+        self.policy_mdp_result = rospy.Subscriber(
+                "/results/policy_mdp_list",
+                PathList,
+                self.handle_mdp_path_data
         )
         self.simulation_complete_sub = rospy.Subscriber(
                 "/map_node/sim_complete",
@@ -33,9 +43,11 @@ class RobotLogger():
 
     def init_files(self):
         open('path_list.json', 'w+').close()
-        open('policy_list.json', 'w+').close()
+        open('policy_QL_list.json', 'w+').close()
+        open('policy_MDP_list.json', 'w+').close()
 
-        self.policy_list = []
+        self.policy_ql_list = []
+        self.policy_mdp_list = []
         self.path_list = []
         self.iteration_number = 0
 
@@ -43,13 +55,19 @@ class RobotLogger():
         x, y = self.config["map_size"]
         return [policy_list[i : i + y] for i in xrange(0, len(policy_list), y)]"""
 
-    def handle_mdp_policy_data(self, policy_list):
+    def handle_ql_policy_data(self, policy_list):
         #print "testing data    ", list(policy_list.data)
         if self.generate_video:
             #data_to_publish = self.convert_list_to_2d_array(policy_list.data)
             #image_util.save_image_for_iteration(data_to_publish, self.iteration_number)
             image_util.save_image_for_iteration(list(policy_list.data), self.iteration_number)
             self.iteration_number += 1
+
+    def handle_ql_path_data(self, path_list):
+        self.policy_ql_list.append(path_list.data)
+        #print policy_list.data
+    def handle_mdp_path_data(self, path_list):
+        self.policy_mdp_list.append(path_list.data)
 
         #print "interation ", self.iteration_number
 
@@ -61,13 +79,17 @@ class RobotLogger():
         """if self.generate_video:
             print "iteration video"
             image_util.generate_video(self.iteration_number)"""
-        """if message.data:
+        #print self.policy_list
+        if message.data:
             with open('path_list.json', 'w') as path:
                 #Saving the entire path to be confirmed
                 json.dump(self.path_list, path)
-            with open('policy_list.json', 'w') as policy:
+            with open('policy_QL_list.json', 'w') as policy:
                 #Saving only the last policy to be compared
-                json.dump(self.policy_list[-1], policy)"""
+                json.dump(self.policy_ql_list[-1], policy)
+            with open('policy_MDP_list.json', 'w') as policy:
+                #Saving only the last policy to be compared
+                json.dump(self.policy_mdp_list[-1], policy)
 
 if __name__ == '__main__':
     rl = RobotLogger()

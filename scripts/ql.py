@@ -6,7 +6,7 @@ import numpy as np
 import random as r
 from read_config import read_config
 from std_msgs.msg import Bool, String, Float32
-from cse_190_assi_3.msg import PolicyList
+from cse_190_assi_3.msg import PolicyList, PathList
 import random
 
 
@@ -47,6 +47,12 @@ class QL():
 		self.policy_pub = rospy.Publisher(
 			"/results/policy_list",
 			PolicyList,
+			queue_size = 100
+		)
+
+		self.path_pub = rospy.Publisher(
+			"/results/pathql_list",
+			PathList,
 			queue_size = 100
 		)
 		
@@ -139,9 +145,9 @@ class QL():
 	def output_policy(self,pos):
 		sign = None
 		output = []
-		"""for x in range(self.map_s[0]):
+		policy = []
+		for x in range(self.map_s[0]):
 			#print
-			
 			for y in range(self.map_s[1]):
 				if self.isWall(x, y):
 					sign = "WALL"
@@ -160,8 +166,8 @@ class QL():
 					if [i, j] == [-1, 0]:
 						sign = "N"
 						
-				output.append(sign)
-				#print sign,"""
+				policy.append(sign)
+				#print sign
 		for x in range(self.map_s[0]):			
 			for y in range(self.map_s[1]):
 				values = self.q_values[x][y].values()
@@ -176,4 +182,5 @@ class QL():
 					output.append(0)
 
 		self.policy_pub.publish(output)
+		self.path_pub.publish(policy)
 		

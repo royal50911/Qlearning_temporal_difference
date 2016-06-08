@@ -58,9 +58,9 @@ class Robot():
 
     def search_exe(self):
         
-        #Astar()
+        Astar()
         #self.path_pub.publish(path)
-        #MDP()
+        MDP()
         QL()
         self.finish_pub.publish(True)
         rospy.sleep(10)

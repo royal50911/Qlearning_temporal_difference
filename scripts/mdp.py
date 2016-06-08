@@ -6,7 +6,7 @@ import numpy as np
 import random as r
 from read_config import read_config
 from std_msgs.msg import Bool, String, Float32
-from cse_190_assi_3.msg import PolicyList
+from cse_190_assi_3.msg import PolicyList,PathList
 
 
 class MDP():
@@ -61,8 +61,8 @@ class MDP():
     def init_ros_things(self):
         
         self.policy_pub = rospy.Publisher(
-            "/results/policy_list",
-            PolicyList,
+            "/results/policy_mdp_list",
+            PathList,
             queue_size = 100,
         )
 
