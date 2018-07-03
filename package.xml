@@ -7,7 +7,7 @@
     <maintainer email="sean@todo.todo">sean</maintainer>
 
 
-    <license>TODO</license>
+    <license>TODO List</license>
 
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roscpp</build_depend>
